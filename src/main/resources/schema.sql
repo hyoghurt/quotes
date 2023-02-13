@@ -1,33 +1,44 @@
-drop table if exists votes;
-drop table if exists quotes;
-drop table if exists users;
-drop index if exists ix_quote_id_username;
+DROP TABLE IF EXISTS votes;
+DROP TABLE IF EXISTS quotes;
+DROP TABLE IF EXISTS users;
+DROP INDEX IF EXISTS ix_quote_id_username;
+DROP INDEX IF EXISTS ix_auth_username;
 
-create table if not exists users
+CREATE TABLE IF NOT EXISTS users
 (
-    username varchar_ignorecase(50) not null primary key,
-    password varchar_ignorecase(500) not null
+    username VARCHAR_IGNORECASE(50) NOT NULL PRIMARY KEY,
+    password VARCHAR_IGNORECASE(500) NOT NULL
+    enabled  BOOLEAN NOT NULL
 );
 
-create table if not exists quotes
+CREATE TABLE IF NOT EXISTS authorities
 (
-    id IDENTITY not null primary key,
-    quote varchar(500),
-    timestamp timestamp,
+    username VARCHAR_IGNORECASE(50) NOT NULL,
+    authority VARCHAR_IGNORECASE(50) NOT NULL,
+    CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ix_auth_username ON authorities (username,authority);
+
+CREATE TABLE IF NOT EXISTS quotes
+(
+    id IDENTITY NOT NULL PRIMARY KEY,
+    quote VARCHAR(500),
+    timestamp TIMESTAMP,
     username VARCHAR(50),
     votes_sum INTEGER,
     vote_id INTEGER
 );
 
-create table if not exists votes
+CREATE TABLE IF NOT EXISTS votes
 (
-    id IDENTITY not null primary key,
+    id IDENTITY NOT NULL PRIMARY KEY,
     quote_id INTEGER,
     username VARCHAR(50),
     vote VARCHAR(8),
     timestamp TIMESTAMP,
     current_votes_sum INTEGER,
-    constraint fk_votes_quotes foreign key(quote_id) references quotes(id)
+    CONSTRAINT fk_votes_quotes FOREIGN KEY(quote_id) REFERENCES quotes(id)
 );
 
-create unique index if not exists ix_quote_id_username on votes (quote_id,username);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_quote_id_username ON votes (quote_id,username);
