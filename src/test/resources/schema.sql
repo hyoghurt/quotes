@@ -27,8 +27,7 @@ CREATE TABLE IF NOT EXISTS quotes
     quote VARCHAR(500),
     timestamp TIMESTAMP,
     username VARCHAR(50) NOT NULL,
-    votes_sum INTEGER,
-    CONSTRAINT fk_quotes_users FOREIGN KEY(username) REFERENCES users(username)
+    votes_sum INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS votes
@@ -38,9 +37,7 @@ CREATE TABLE IF NOT EXISTS votes
     username VARCHAR(50) NOT NULL,
     vote VARCHAR(8),
     timestamp TIMESTAMP,
-    current_votes_sum INTEGER,
-    CONSTRAINT fk_votes_quotes FOREIGN KEY(quote_id) REFERENCES quotes(id),
-    CONSTRAINT fk_votes_users FOREIGN KEY(username) REFERENCES users(username)
+    current_votes_sum INTEGER
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS ix_quote_id_username ON votes (quote_id,username);

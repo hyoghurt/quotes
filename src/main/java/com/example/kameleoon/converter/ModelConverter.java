@@ -41,7 +41,6 @@ public class ModelConverter {
 
         response.setElements(elements);
         response.setTotalElements((int) quoteEntityPage.getTotalElements());
-        response.setTotalPage(quoteEntityPage.getTotalPages());
 
         return response;
     }

@@ -1,4 +1,6 @@
-drop table if exists votes;
-drop table if exists quotes;
-drop table if exists users;
-drop index if exists ix_quote_id_username;
+DROP TABLE IF EXISTS votes;
+DROP TABLE IF EXISTS quotes;
+DROP TABLE IF EXISTS authorities;
+DROP TABLE IF EXISTS users;
+DROP INDEX IF EXISTS ix_quote_id_username;
+DROP INDEX IF EXISTS ix_auth_username;

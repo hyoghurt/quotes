@@ -17,6 +17,4 @@ public class QuoteEntity {
     private String username;
     @Column("VOTES_SUM")
     private Integer votesSum;
-    @Column("VOTE_ID")
-    private Integer voteId;
 }

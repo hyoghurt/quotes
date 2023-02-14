@@ -133,10 +133,9 @@ public class QuoteServiceImpl implements QuoteService {
 
         newVote.setVote(voteUnitResult);
         newVote.setCurrentVotesSum(votesSum);
-        newVote = voteRepository.save(newVote);
+        voteRepository.save(newVote);
 
         quoteEntity.setVotesSum(votesSum);
-        quoteEntity.setVoteId(newVote.getId());
         quoteRepository.save(quoteEntity);
     }
 

@@ -33,7 +33,7 @@ class VoteUpDownTest {
     @Test
     @Order(1)
     @WithMockUser(authorities = "USER", username = "userupdown0", password = "user0")
-    @Sql(value = {"classpath:./drop_table.sql", "classpath:./schema.sql"})
+    @Sql(value = {"classpath:./schema.sql"})
     void initQuote() throws Exception {
         QuoteRequest request = new QuoteRequest();
         String quote = "hello new quote test";

@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Configuration
 public class LoadDatabase {
@@ -21,44 +20,54 @@ public class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UserService service, QuoteService quoteService) {
         return args -> {
-            generateData(quoteService);
-//            generateUsers(service);
-//            generateQuotes(quoteService);
+            List<String> userList = generateUsers(service);
+            List<Integer> quotesIdList = generateQuotes(quoteService, userList);
+            generateData(quoteService, userList, quotesIdList);
         };
     }
 
-    private static void generateQuotes(QuoteService quoteService) {
-        for (int i = 0; i < 10; i++) {
-            QuoteRequest quoteRequest = new QuoteRequest();
-            quoteRequest.setQuote("hello test " + i);
-            quoteService.createQuote(quoteRequest, "user" + i);
-        }
-    }
+    private static List<String> generateUsers(UserService service) {
+        List<String> list = new ArrayList<>();
 
-    private static void generateUsers(UserService service) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
             SignUpRequest signUpRequest = new SignUpRequest();
             signUpRequest.setUsername("user" + i);
             signUpRequest.setPassword("user" + i);
             service.createUser(signUpRequest);
+            list.add(signUpRequest.getUsername());
         }
+
+        return list;
     }
 
-    private static void generateData(QuoteService quoteService) {
-        Random RANDOM = new Random();
-        List<Integer> quoteIds = new ArrayList<>();
+    private static List<Integer> generateQuotes(QuoteService quoteService, List<String> userList) {
+        List<Integer> list = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
-            QuoteRequest request = new QuoteRequest();
-            request.setQuote("hello new " + i);
-            String usernamequote = "quote" + i;
-            quoteIds.add(quoteService.createQuote(request, usernamequote));
+        for (String user : userList) {
+            for (int i = 0; i < 4; i++) {
+                QuoteRequest quoteRequest = new QuoteRequest();
+                quoteRequest.setQuote("hello test " + i + user);
+                Integer quoteId = quoteService.createQuote(quoteRequest, user);
+                list.add(quoteId);
+            }
         }
 
-        for (int i = 0; i < 50; i++) {
-            for (Integer quoteId : quoteIds) {
+        return list;
+    }
+
+
+    private static void generateData(QuoteService quoteService, List<String> userList, List<Integer> quoteIdList) {
+        Random RANDOM = new Random();
+
+        for (Integer quoteId : quoteIdList) {
+            for (String user : userList) {
+
                 VoteUnit value =  VoteUnit.values()[RANDOM.nextInt(VoteUnit.values().length)];
-                quoteService.vote(quoteId, value, String.valueOf(UUID.randomUUID()));
+                try {
+                    quoteService.vote(quoteId, value, user);
+                } catch (Exception ignored) {
+
+                }
             }
         }
     }
