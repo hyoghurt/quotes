@@ -1,6 +1,6 @@
 package com.example.kameleoon.service;
 
-import com.example.kameleoon.converter.ModelConverter;
+import com.example.kameleoon.converter.ModelMapper;
 import com.example.kameleoon.exception.QuoteNotFoundException;
 import com.example.kameleoon.exception.VoteForbiddenException;
 import com.example.kameleoon.model.entity.QuoteEntity;
@@ -24,7 +24,7 @@ class QuoteServiceImplTest {
     void setUp() {
         quoteRepository = Mockito.mock(QuoteRepository.class);
         VoteRepository voteRepository = Mockito.mock(VoteRepository.class);
-        quoteService = new QuoteServiceImpl(quoteRepository, voteRepository, new ModelConverter());
+        quoteService = new QuoteServiceImpl(quoteRepository, voteRepository, new ModelMapper());
     }
 
     @Test

@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ModelConverter {
-    public QuoteEntity quoteRequestToQuoteEntity(QuoteRequest quoteRequest) {
+public class ModelMapper {
+    public QuoteEntity toEntity(QuoteRequest quoteRequest) {
         QuoteEntity entity = new QuoteEntity();
         entity.setQuote(quoteRequest.getQuote());
         entity.setTimestamp(new Timestamp(System.currentTimeMillis()));
@@ -23,7 +23,7 @@ public class ModelConverter {
         return entity;
     }
 
-    public QuoteResponse quoteEntityToQuoteResponse(QuoteEntity quoteEntity) {
+    public QuoteResponse toDto(QuoteEntity quoteEntity) {
         QuoteResponse response = new QuoteResponse();
         response.setQuote(quoteEntity.getQuote());
         response.setId(quoteEntity.getId());
@@ -33,11 +33,11 @@ public class ModelConverter {
         return response;
     }
 
-    public QuotesResponse entityPageToQuotesResponse(Page<QuoteEntity> quoteEntityPage) {
+    public QuotesResponse toDto(Page<QuoteEntity> quoteEntityPage) {
         QuotesResponse response = new QuotesResponse();
 
         List<QuoteResponse> elements = quoteEntityPage.getContent().stream()
-                .map(this::quoteEntityToQuoteResponse).collect(Collectors.toList());
+                .map(this::toDto).collect(Collectors.toList());
 
         response.setElements(elements);
         response.setTotalElements((int) quoteEntityPage.getTotalElements());
@@ -45,7 +45,7 @@ public class ModelConverter {
         return response;
     }
 
-    public BarResponse voteEntityToBarResponse(VoteEntity voteEntity) {
+    public BarResponse toDto(VoteEntity voteEntity) {
         BarResponse barResponse = new BarResponse();
         barResponse.setTimestamp(voteEntity.getTimestamp());
         barResponse.setValue(voteEntity.getCurrentVotesSum());

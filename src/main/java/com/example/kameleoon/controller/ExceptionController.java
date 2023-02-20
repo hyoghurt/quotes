@@ -16,24 +16,14 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(QuoteForbiddenException.class)
+    @ExceptionHandler({QuoteForbiddenException.class, VoteForbiddenException.class})
     public ResponseEntity<ErrorResponse> handleQuoteForbiddenException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(QuoteBadRequestException.class)
+    @ExceptionHandler({QuoteBadRequestException.class, UserBadRequestException.class})
     public ResponseEntity<ErrorResponse> handleQuoteBadRequestException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
-    }
-
-    @ExceptionHandler(UserBadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleUserBadRequestException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
-    }
-
-    @ExceptionHandler(VoteForbiddenException.class)
-    public ResponseEntity<ErrorResponse> handleVoteForbiddenException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(ConversionFailedException.class)

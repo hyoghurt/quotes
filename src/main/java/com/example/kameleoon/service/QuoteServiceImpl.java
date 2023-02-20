@@ -1,7 +1,7 @@
 package com.example.kameleoon.service;
 
 
-import com.example.kameleoon.converter.ModelConverter;
+import com.example.kameleoon.converter.ModelMapper;
 import com.example.kameleoon.exception.QuoteNotFoundException;
 import com.example.kameleoon.exception.VoteForbiddenException;
 import com.example.kameleoon.model.entity.QuoteEntity;
@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 public class QuoteServiceImpl implements QuoteService {
     private final QuoteRepository quoteRepository;
     private final VoteRepository voteRepository;
-    private final ModelConverter modelConverter;
+    private final ModelMapper modelMapper;
 
     @Override
     public Integer createQuote(QuoteRequest quoteRequest, String username) {
-        QuoteEntity entity = modelConverter.quoteRequestToQuoteEntity(quoteRequest);
+        QuoteEntity entity = modelMapper.toEntity(quoteRequest);
         entity.setUsername(username);
         return quoteRepository.save(entity).getId();
     }
@@ -46,7 +46,7 @@ public class QuoteServiceImpl implements QuoteService {
     public QuoteResponse getQuoteById(Integer quoteId) {
         QuoteEntity entity = quoteRepository.findById(quoteId)
                 .orElseThrow(() -> new QuoteNotFoundException("not found " + quoteId));
-        return modelConverter.quoteEntityToQuoteResponse(entity);
+        return modelMapper.toDto(entity);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class QuoteServiceImpl implements QuoteService {
     public QuotesResponse getTopQuotes() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("votesSum").descending());
         Page<QuoteEntity> entityPage = quoteRepository.findAll(pageable);
-        return modelConverter.entityPageToQuotesResponse(entityPage);
+        return modelMapper.toDto(entityPage);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class QuoteServiceImpl implements QuoteService {
                 (quoteId, new Timestamp(startTime), new Timestamp(endTime));
 
         List<BarResponse> elements = VoteEntityList.stream()
-                .map(modelConverter::voteEntityToBarResponse)
+                .map(modelMapper::toDto)
                 .collect(Collectors.toList());
 
         QuoteEvolutionResponse response = new QuoteEvolutionResponse();
